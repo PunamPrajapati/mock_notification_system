@@ -6,6 +6,7 @@ const summaryNotification: FastifyPluginAsync = async (app) => {
     const [rows] = await db.query(`
       SELECT 
         COUNT(*) AS total,
+        SUM(status = 'pending') AS pending,
         SUM(status = 'processed') AS success,
         SUM(status = 'failed') AS failed
       FROM notifications
