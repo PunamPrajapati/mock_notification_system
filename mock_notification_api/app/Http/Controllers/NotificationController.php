@@ -29,7 +29,7 @@ class NotificationController extends Controller
             'message' => $request->message,
         ]);
 
-        // dispatch(new \App\Jobs\PublishNotificationJob($notification));
+        dispatch(new \App\Jobs\PublishNotificationJob($notification));
 
         return response()->json([
             'status' => true,

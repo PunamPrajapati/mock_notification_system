@@ -1,0 +1,47 @@
+services:
+  laravel:
+    build:
+      context: ./mock_notification_api
+      dockerfile: Dockerfile
+    volumes:
+      - ./mock_notification_api:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+      # add other env vars as needed
+
+  nodejs:
+    build:
+      context: ./mock_notification_microservice
+      dockerfile: Dockerfile
+    volumes:
+      - ./mock_notification_microservice:/usr/src/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      # add other env vars as needed
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      DB_DATABASE: ${DB_DATABASE}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
