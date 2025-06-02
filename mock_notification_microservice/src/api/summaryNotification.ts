@@ -1,18 +1,16 @@
 import { FastifyPluginAsync } from "fastify";
-import { db } from '../lib/db';
+import axios from 'axios';
 
 const summaryNotification: FastifyPluginAsync = async (app) => {
   app.get('/notifications/summary', async (req, res) => {
-    const [rows] = await db.query(`
-      SELECT 
-        COUNT(*) AS total,
-        SUM(status = 'pending') AS pending,
-        SUM(status = 'processed') AS success,
-        SUM(status = 'failed') AS failed
-      FROM notifications
-    `)
-
-    return rows
+    try {
+        const laravelBaseUrl = process.env.LARAVEL_API_URL || 'http://127.0.0.1:8000'
+        const response = await axios.get(`${laravelBaseUrl}/notifications/summary`)
+        return response.data
+        } catch (error) {
+        app.log.error(error)
+        return res.status(500).send({ error: 'Failed to fetch notification summary from Laravel API.' })
+    }
   })
 }
 
