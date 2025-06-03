@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const LARAVEL_API_URL = process.env.LARAVEL_API_URL || 'http://localhost:8000';
+const LARAVEL_API_URL = process.env.LARAVEL_API_URL || 'http://127.0.0.1:8000';
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1000;
 

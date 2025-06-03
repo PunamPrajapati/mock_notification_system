@@ -15,4 +15,7 @@ COPY . .
 # Expose app port (change if your app uses a different port)
 EXPOSE 3000
 
+# If you're using TypeScript, add this:
+RUN npm run build
+
 CMD ["npm", "start"]
