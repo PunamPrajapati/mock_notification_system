@@ -1,12 +1,10 @@
 import Fastify from 'fastify'
-import recentNotification from './api/recentNotification';
-import summaryNotification from './api/summaryNotification';
+import notifications from './api/notifications';
 import dotenv from 'dotenv'
 dotenv.config()
 
 const app = Fastify()
 
-app.register(recentNotification);
-app.register(summaryNotification);
+app.register(notifications);
 
 export default app
