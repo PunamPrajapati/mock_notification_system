@@ -71,5 +71,43 @@ npm run dev
 
 ---
 
-**Note:**  
-You can still use Docker for convenience, but the above instructions help you run each service natively for local development and debugging.
+## API Documentation
+
+The detailed API documentation is provided in the attached PDF file sent with this email.  
+Please refer to the attached document for complete API endpoints, request/response formats, and usage instructions.
+
+---
+
+## How to Test Notification Message Consumption
+
+You can manually test the message consumption workflow in this project by publishing a notification to Redis and running the Node.js consumer.
+
+### 1. Start the Message Consumer
+
+In a new terminal, navigate to the **Node.js microservice directory** and run:
+```sh
+cd ../mock_notification_microservice
+npm run start:consumer
+```
+This command starts the notification consumer, which listens for messages on the configured Redis channel (e.g., `notifications`).
+
+### 2. Publish a Notification Message to Redis
+
+Open another terminal and use the Redis CLI to publish a test notification message.  
+``Let us assume when notification request api is called in laravel, below notification message is published``
+For example:
+```sh
+docker compose exec redis redis-cli
+PUBLISH notifications '{"id": 1, "user_id": 1, "message": "This is just for testing notification store api", "status": "processed", "created_at": "2025-06-01T11:21:59.000000Z", "updated_at": "2025-06-01T12:22:41.000000Z"}'
+```
+> Make sure you use single quotes around the JSON message.
+
+### 3. Observe the Consumer Output
+
+If everything is set up correctly, you should see the consumer terminal display the received notification message.
+
+---
+
+**Tip:**  
+- Ensure Redis is running and accessible.
+- The channel name in the publish command (`notifications`) should match the one your consumer is subscribed to.
