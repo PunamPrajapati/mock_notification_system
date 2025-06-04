@@ -5,7 +5,7 @@ const NOTIFICATION_CHANNEL = process.env.NOTIFICATION_CHANNEL || 'notifications'
 
 export async function startNotificationConsumer() {
     console.log('startNotificationConsumer called');
-  await subscribeToNotifications(NOTIFICATION_CHANNEL, async (message) => {
+    await subscribeToNotifications(NOTIFICATION_CHANNEL, async (message) => {
     console.log('Raw message received:', message);
     try {
         const payload = JSON.parse(message);

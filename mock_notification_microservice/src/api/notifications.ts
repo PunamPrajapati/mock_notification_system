@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from 'fastify'
 import axios from 'axios'
 
-const laravelBaseUrl = process.env.LARAVEL_API_URL || 'http://127.0.0.1:8000'
+const laravelBaseUrl = process.env.LARAVEL_API_URL || 'http://127.0.0.1:8000/api'
 const notifications: FastifyPluginAsync = async (app) => {
     app.get('/notifications/recent', async (req, res) => {
         try {

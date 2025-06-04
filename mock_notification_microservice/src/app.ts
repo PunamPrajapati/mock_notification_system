@@ -1,7 +1,7 @@
 import Fastify from 'fastify'
-import notifications from './api/notifications';
 import dotenv from 'dotenv'
 dotenv.config()
+import notifications from './api/notifications';
 
 const app = Fastify()
 
