@@ -27,6 +27,7 @@ cd mock_notification_system
 ```sh
 cd mock_notification_api
 composer install
+php artisan key:generate # Generate key
 php artisan migrate   # Run migrations
 ```
 
