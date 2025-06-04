@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Services\CacheService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class NotificationController extends Controller
 {
+
+    protected $cache;
+
+    public function __construct(CacheService $cache)
+    {
+        $this->cache = $cache;
+    }
 
     public function store(Request $request)
     {
@@ -29,6 +39,7 @@ class NotificationController extends Controller
             'message' => $request->message,
         ]);
 
+        $this->cache->forget(['recent_notifications', 'summary_notifications']);
         dispatch(new \App\Jobs\PublishNotificationJob($notification));
 
         return response()->json([
@@ -65,7 +76,10 @@ class NotificationController extends Controller
 
     public function recent()
     {
-        $notifications = Notification::orderBy('created_at', 'desc')->limit(10)->get();
+        $notifications = $this->cache->remember('recent_notifications', 10, function() {
+            return Notification::orderBy('created_at', 'desc')->limit(10)->get();
+        });
+         
         return response()->json([
             'status' => true,
             'message' => 'Recent Notifications',
@@ -75,12 +89,14 @@ class NotificationController extends Controller
 
     public function summary()
     {
-        $summary = [
-            'total' => Notification::count(),
-            'processed' => Notification::where('status', 'processed')->count(),
-            'failed' => Notification::where('status', 'failed')->count(),
-            'pending' => Notification::where('status', 'pending')->count(),
-        ];
+        $summary = $this->cache->remember('summary_notifications', 10, function() {
+            return [
+                    'total' => Notification::count(),
+                    'processed' => Notification::where('status', 'processed')->count(),
+                    'failed' => Notification::where('status', 'failed')->count(),
+                    'pending' => Notification::where('status', 'pending')->count(),
+                ];
+        });
         return response()->json([
             'status' => true,
             'message' => 'Notification Summary',
